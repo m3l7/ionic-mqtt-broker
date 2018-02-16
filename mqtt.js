@@ -193,7 +193,7 @@ class MqttBroker {
      */
     authorizeSubscribe(client, topic, callback) {
         
-        if (topic === this.qrcode + "/command" || topic === this.qrcode + "/connection") {
+        if (topic === this.qrcode + "/event" || topic === this.qrcode + "/command" || topic === this.qrcode + "/connection") {
             console.log(this.getClientInfo(client) + "Authorized Subscribe (topic) " + topic);
             callback(null, true);
         } else {
