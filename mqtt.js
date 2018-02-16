@@ -116,7 +116,6 @@ class MqttBroker {
         // payload: {{command}}
         if (topic === this.qrcode + "/command") {
             let payloadString = String.fromCharCode(...payload);
-            let commandType = payload.readUIntBE(0, 1);
 
             if (payloadString === "1") {
                 // switch on lamp
