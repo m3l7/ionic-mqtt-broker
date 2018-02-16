@@ -112,6 +112,8 @@ class MqttBroker {
         let topic= packet.topic;
         let payload= packet.payload;
 
+        // topic: {{qrcode}}/command
+        // payload: {{command}}
         if (topic === this.qrcode + "/command") {
             let payloadString = String.fromCharCode(...payload);
             let commandType = payload.readUIntBE(0, 1);
@@ -120,10 +122,20 @@ class MqttBroker {
                 // switch on lamp
                 console.log("==== LAMP ON")
                 this.lampOn = true;
+
+                this.server.publish({
+                    topic: this.qrcode + "/event",
+                    payload: client.username + " ha acceso la luce"
+                })
             }
             else if (payloadString === "2") {
                 // switch off lamp
                 this.lampOn = false;
+
+                this.server.publish({
+                    topic: this.qrcode + "/event",
+                    payload: client.username + " ha spento la luce"
+                })
             }
             else if (payloadString === "3") {
                 console.log("==== LAMP STATE")
@@ -138,6 +150,10 @@ class MqttBroker {
                 })
             }
         }
+    }
+
+    notificaEvento(evento) {
+
     }
 
 
@@ -157,10 +173,11 @@ class MqttBroker {
             passwordString = String.fromCharCode(...password);
         }
         
-        if (username !== "ionic" && password !== "course") {
+        if (password !== "course") {
             console.log("Auth FAIL" + username + " (pass) " + passwordString);
             callback(null, false);
         } else {
+            client.username = username;
             console.log("Auth OK" + username + " (pass) " + passwordString);
             callback(null, true);
         }
