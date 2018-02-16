@@ -123,19 +123,24 @@ class MqttBroker {
                 console.log("==== LAMP ON")
                 this.lampOn = true;
 
+		if (client) {
                 this.server.publish({
                     topic: this.qrcode + "/event",
                     payload: client.username + " ha acceso la luce"
                 })
+		}
             }
             else if (payloadString === "2") {
+		console.log("==== LAMP OFF")
                 // switch off lamp
                 this.lampOn = false;
 
+		if (client) {
                 this.server.publish({
                     topic: this.qrcode + "/event",
                     payload: client.username + " ha spento la luce"
                 })
+		}
             }
             else if (payloadString === "3") {
                 console.log("==== LAMP STATE")
@@ -173,7 +178,7 @@ class MqttBroker {
             passwordString = String.fromCharCode(...password);
         }
         
-        if (password !== "course") {
+        if (passwordString !== "course") {
             console.log("Auth FAIL" + username + " (pass) " + passwordString);
             callback(null, false);
         } else {
