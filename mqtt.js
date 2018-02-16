@@ -123,37 +123,32 @@ class MqttBroker {
                 console.log("==== LAMP ON")
                 this.lampOn = true;
 
-		if (client) {
-                this.server.publish({
-                    topic: this.qrcode + "/event",
-                    payload: client.username + " ha acceso la luce"
-                })
-		}
+                if (client) {
+                        this.server.publish({
+                            topic: this.qrcode + "/event",
+                            payload: client.username + " ha acceso la luce"
+                        })
+                }
             }
             else if (payloadString === "2") {
-		console.log("==== LAMP OFF")
+		        console.log("==== LAMP OFF")
                 // switch off lamp
                 this.lampOn = false;
 
-		if (client) {
-                this.server.publish({
-                    topic: this.qrcode + "/event",
-                    payload: client.username + " ha spento la luce"
-                })
-		}
+                if (client) {
+                        this.server.publish({
+                            topic: this.qrcode + "/event",
+                            payload: client.username + " ha spento la luce"
+                        })
+                }
             }
             else if (payloadString === "3") {
                 console.log("==== LAMP STATE")
                 // send lamp state
-                let command = (this.lampOn) ? 1: 2;
-                // command = command.charCodeAt(0);
-                let buf = Buffer.alloc(1);
-                buf.writeUIntBE(command, 0, 1);
+                let command = (this.lampOn) ? "1": "2";
                 this.server.publish({
-                    packet: {
-                        topic: this.qrcode + "/command",
-                        payload: buf
-                    }
+                    topic: this.qrcode + "/command",
+                    payload: command
                 })
             }
         }
