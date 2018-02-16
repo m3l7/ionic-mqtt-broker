@@ -145,13 +145,15 @@ class MqttBroker {
             else if (payloadString === "3") {
                 console.log("==== LAMP STATE")
                 // send lamp state
-                let command = (this.lampOn) ? "1": "2";
-                command = command.charCodeAt(0);
+                let command = (this.lampOn) ? 1: 2;
+                // command = command.charCodeAt(0);
                 let buf = Buffer.alloc(1);
                 buf.writeUIntBE(command, 0, 1);
                 this.server.publish({
-                    topic: this.qrcode + "/command",
-                    payload: buf
+                    packet: {
+                        topic: this.qrcode + "/command",
+                        payload: buf
+                    }
                 })
             }
         }
